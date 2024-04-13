@@ -40,7 +40,7 @@ The returned result can be a object list with each element having the following 
 5. The user can then call the API to get the top 10 people with the highest scores from the score service
 
 <p>
-  <img src="images/score_service.png" />
+  <img src="images/score_architecture.jpeg" />
 </p>
 
 ## Database Selection
