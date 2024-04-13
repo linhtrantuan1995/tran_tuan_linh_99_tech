@@ -33,15 +33,16 @@ The returned result can be a object list with each element having the following 
 - score: 100
 
 # High level design
+
+<p>
+  <img src="images/score_architecture.jpeg" />
+</p>
+
 1. The user logs in to authenticate information
 2. The user sends a command to perform an action to the action service
 3. The user sends a score update command to the score service
 4. Score service saves scores into the DB
 5. The user can then call the API to get the top 10 people with the highest scores from the score service
-
-<p>
-  <img src="images/score_architecture.jpeg" />
-</p>
 
 ## Database Selection
 If a relational database is used (like MySQL), the command when selecting top 10 score will be looked like this
@@ -50,7 +51,15 @@ If a relational database is used (like MySQL), the command when selecting top 10
 This command works if the data is small, however if we have millions of users the latency will be very high because when running this command, MySQL will have to sort all the scores in the table to get the last 10 people.
 So I suggest using Redis in this case. Redis has a data structure called sorted set and related API: 
 - ZINCRBY: insert user score into the data structure if it doesn't exist. Otherwise, update the score for the user. It takes O(log(n)) to execute
+```
+    ZINCRBY (key) (increment) (user)
+    ZINCRBY leaderboard 10 test
+```
 - ZREVRANGE: fetch a range of users sorted by the score. This take O(log(n) + m) where m is the number of entries to fetch and n is the number of entries in the sorted set.
+```
+    ZREVRANGE leaderboard 0 9 WITHSCORES
+    The returned value will be [(test1, 100), (test2, 99), (test3, 98)]
+```
 
 ## Too much POST /v1/scores commands
 - If the user sends too many POST /v1/scores commands from the action service to the score service, it may be necessary to build a message queue to easily expand the score service, avoiding overload.
