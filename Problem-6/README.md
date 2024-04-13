@@ -56,7 +56,7 @@ So I suggest using Redis in this case. Redis has a data structure called sorted 
 - If the user sends too many POST /v1/scores commands from the action service to the score service, it may be necessary to build a message queue to easily expand the score service, avoiding overload.
 
 <p>
-  <img src="images/score_message_queue.png.png" />
+  <img src="images/score_kafka_service.jpeg" />
 </p>
 
 
